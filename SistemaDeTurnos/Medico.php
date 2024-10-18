@@ -21,6 +21,10 @@ class Medico extends Persona {
         return $this->matricula;
     }
 
+    public function listar(){
+        return $this->getNombreCompleto()."\nMatricula: ".$this->getMatricula()."Especialidad:".$this->getEspecialidad()."\n";
+    }
+
     public function getJson(){
         $output = [];
         $output['nombre'] = $this->nombre;

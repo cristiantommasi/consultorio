@@ -8,7 +8,7 @@ class Paciente extends Persona {
 
     public function __construct($nombre, $apellido, $dni) {
         parent::__construct($nombre, $apellido, $dni);
-        $this->historialMedico = null;
+        
     }
 
     public function getHistorialMedico(){
@@ -16,15 +16,15 @@ class Paciente extends Persona {
     }
 
     public function setHistorialMedico($texto){
-        $this->historialMedico = $this->getHistorialMedico(). "\n" .$texto ."\n";
+        $this->historialMedico = $this->getHistorialMedico(). " " .$texto;
     }
 
     public function getJson(){
         $output = [];
-        $output['nombre'] = $this->getNombre();
-        $output['apellido'] = $this->getApellido();
-        $output['dni'] = $this->getDni();
-        $output['historialMedico'] = $this->getHistorialMedico();
+        $output['nombre'] = $this->nombre;
+        $output['apellido'] = $this->apellido;
+        $output['dni'] = $this->dni;
+        $output['historialMedico'] = $this->historialMedico;
 
         return json_encode($output);
     }

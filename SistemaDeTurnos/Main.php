@@ -3,8 +3,6 @@
     require_once("Consultorio.php");
     require_once("Menu.php");
 
-    
-    
     $consultorio = new Consultorio();
     $consultorio->leer('consultorio.json');
 
@@ -20,20 +18,13 @@
             $paciente = $subMenu->elegir();
                 switch ($paciente) {
                     case '1':
-                        //lograda
-                        $consultorio->sacarTurno();
-                        break;
+                        $consultorio->sacarTurno();break;//lograda. Faltaria comprobar que no hay turno en ese horario para TOMARLO
                     case "2":
-                        //revisar
-                        $consultorio->anularTurno();
-                        break;
+                        $consultorio->anularTurno();break;//lograda
                     case "3":
-                        echo "ingrese fecha";
-                        break;
+                        $consultorio->turnosDisponibles();break;//lograda
                     case "4":
-                        //lograda
-                        $consultorio->listarMedicos();
-                        break;
+                        $consultorio->listarMedicos();break;//lograda
                 } 
                 Menu::pressEnter();
                 Menu::cls(); break;
@@ -43,17 +34,11 @@
             $medico = $subMenu->elegir();
                 switch ($medico) {
                     case '1':
-                        //completar
-                        $consultorio->getTurnos();
-                        break;
+                        $consultorio->mostrarDia();break;//anda pero no puedo ordenar los turnos por fecha para mostrar.
                     case "2":
-                        //lograda
-                        $consultorio->mostrarHistorial();
-                        break;
+                        $consultorio->mostrarHistorial();break;//lograda
                     case "3":
-                        //lograda
-                        $consultorio->llenarHistorial();
-                        break;
+                        $consultorio->llenarHistorial();break;//lograda
                 }
                 Menu::pressEnter();
                 Menu::cls(); break;
@@ -63,33 +48,22 @@
             $admin = $subMenu->elegir();
                 switch ($admin) {
                     case '1':
-                        //lograda
-                        $consultorio->agregarPaciente();
-                        break;
+                        $consultorio->agregarPaciente();break;//lograda
                     case "2":
-                        //lograda
-                        $consultorio->agregarMedico();
-                        break;
-                    case "3":
-                        //lograda
-                        $consultorio->sacarTurno();
-                        break;
+                        $consultorio->agregarMedico();break;//lograda
+                    case "3":    
+                        $consultorio->sacarTurno();break;//lograda
                     case "4":
-                        $consultorio->anularTurno();
-                        break;
+                        $consultorio->anularTurno();break;//lograda
                     case "5":
-                        echo "Ver Turnos por Fecha";
-                        break;
+                        $consultorio->turnosDisponibles();break;
                 }
                 Menu::pressEnter();
                 Menu::cls(); break;
         }    
     } while ($opcion != 0);
 
-    $json_str = $consultorio->getJson();
+    $json_str = $consultorio->getJson(); 
     file_put_contents('consultorio.json', $json_str);
 
-
- 
-
-    echo ("Adios!\n");       
+    echo "Adios!\n";       

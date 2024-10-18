@@ -17,6 +17,14 @@ class Turno {
         return $this->fecha;
     }
 
+    public function getHora() {
+        return $this->hora;
+    }
+
+    public function getTurno() {
+        return $this;
+    }
+
     public function getMedico() {
         return $this->medico;
     }
@@ -25,8 +33,12 @@ class Turno {
         return $this->paciente;
     }
 
+    public function turnoExitoso(){
+        return "Turno: {$this->fecha} {$this->hora}hs. , Médico: {$this->getMedico()}";
+    }
+
     public function mostrarInformacion() {
-        return "Turno: {$this->fecha}, Médico: {$this->medico->getNombreCompleto()}, Paciente: {$this->paciente->getNombreCompleto()}";
+        return "Turno: {$this->fecha} {$this->hora}.\nMédico: {$this->getMedico()}\nPaciente: {$this->getPaciente()}\n\n";
     }
 
     public function getJson(){

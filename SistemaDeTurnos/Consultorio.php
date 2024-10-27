@@ -17,8 +17,25 @@ class Consultorio {
         $this->pacientes = [];
     }
 
-    public function agregarTurno(Turno $turno) {
-        return $this->turnos[] = $turno;
+    public function buscarFecha() { 
+        
+        $fecha = Turno::seleccionarFecha();
+
+        if (Turno::validarFecha($fecha)) {
+            foreach ($this->turnos as $key => $turno) {
+                if ($turno->getFecha() == $fecha) {
+                    return $fecha;
+                }
+            }
+        }
+        return false;
+    }
+
+    public function mostrarDia() {
+        $dia = $this->turnosXdia();
+        foreach ($dia as $d) {
+            echo $d->mostrarInformacion();
+        }
     }
 
     public function turnosXdia() {
@@ -26,9 +43,10 @@ class Consultorio {
             echo "No hay turnos agendados.";
         }else{
             $fecha = $this->buscarFecha();
+            $medico = Medico::seleccionarMedico();
             if (isset($fecha)) {
                 foreach ($this->turnos as $turno) {
-                    if ($turno->getFecha() == $fecha) {
+                    if ($turno->getFecha() == $fecha && $medico == $turno->getMedico()) {
                         $turnoDia[] = $turno;
                     }
                 } 
@@ -39,13 +57,6 @@ class Consultorio {
         }
     }
 
-    public function mostrarDia() {
-        $dia = $this->turnosXdia();
-        foreach ($dia as $d) {
-            echo $d->mostrarInformacion();
-        }
-    }
-
     public function turnosDisponibles() {
         $dia = $this->turnosXdia();
         echo "  Turnos del dia   \n";
@@ -53,7 +64,7 @@ class Consultorio {
         
             for ($i=10; $i <20 ; $i++) { 
                 $condicion = true;
-                $hora = "{$i}hs";
+                $hora = $i;
                 foreach ($dia as $d){
                     if($hora == $d->getHora()){
                         $condicion = false;
@@ -65,48 +76,86 @@ class Consultorio {
                     echo "$i:00hs Tomado\n";
             }
         }
-    }        
-    
-    public function tomarDatoPaciente(){
-        echo "Nombre del paciente: ";
-        $nombre = trim(fgets(STDIN));
-        echo "Apellido del paciente: ";
-        $apellido = trim(fgets(STDIN));
-        echo "DNI del paciente: ";
-        $dni = trim(fgets(STDIN));
-
-        $paciente = new Paciente($nombre, $apellido, $dni);
-        return $paciente;
     }
 
+    public function comprobarTurno($m,$f,$h){
+        $comprobar = true;
+
+        foreach($this->turnos as $turno){
+            if($turno->getFecha() == $f && $turno->getHora() == $h && $turno->getMedico() == $m){
+                $comprobar = false;
+            }
+        }
+        return $comprobar;
+    }
+
+    public function sacarTurno(){
+        $dni = $this->buscarDni();
+        if (isset($dni)) {
+            foreach ($this->pacientes as $paciente) {
+                if ($paciente->getDni() == $dni) {
+                    $fecha = Turno::seleccionarFecha();
+                    if (Turno::validarFecha($fecha)) {
+                        $this->listarMedicosXespecialidad();
+                        $medico = Medico::seleccionarMedico();
+                        $hora = Turno::seleccionarHorario();
+                        if($this->comprobarTurno($medico, $fecha,$hora)){
+                            $turno = new Turno($fecha, $hora, $medico,$paciente->getDni());
+                            $this->turnos[] = $turno;
+                            echo "Turno generado con exito.\n";
+                            echo $turno->turnoExitoso();
+                        }else{
+                            echo "Ya hay un turno TOMADO en ese horario.";
+                        }
+                    }else{ 
+                        echo "Ingreso de fecha invalido. recuerde!!! (dd-mm-YYYY)";
+                    }
+                }
+            } 
+        }else{ 
+            echo "No se encontro el paciente.";
+        }
+    }
+
+    public function anularTurno() {
+        $dni = $this->buscarDni();
+        $fecha = $this->buscarFecha();
+        $medico = Medico::seleccionarMedico();
+        if (isset($fecha)) {
+            foreach ($this->turnos as $key => $turno) {
+                if ($turno->getFecha() == $fecha && $turno->getPaciente() == $dni && $turno->getMedico() == $medico) {
+                    unset($this->turnos[$key]);
+                    echo "Turno cancelado.";
+                }
+            }
+        }else{
+            echo "No se encontró el turno para cancelar.";
+        }
+    }
+
+    public function buscarDni() {
+        echo "Buscar Paciente por Dni: ";
+        $dni = trim(fgets(STDIN));
+        foreach ($this->pacientes as $paciente) {
+            if ($paciente->getDni() == $dni){
+                return $dni;
+            }
+        }
+        return false;
+    }
+    
     public function agregarPaciente(){
-        $paciente = $this->tomarDatoPaciente();
+        $paciente = Paciente::tomarDatoPaciente();
         $this->pacientes[]= $paciente;
         echo "Paciente agregado: {$paciente->getNombreCompleto()}\n";
     }
 
-    public function tomarDatoMedico(){
-        echo "Nombre del médico: ";
-        $nombre = trim(fgets(STDIN));
-        echo "Apellido del médico: ";
-        $apellido = trim(fgets(STDIN));
-        echo "DNI del médico: ";
-        $dni = trim(fgets(STDIN));
-        echo "Especialidad del médico: ";
-        $especialidad = trim(fgets(STDIN));
-        echo "Matricula del médico: ";
-        $matricula = trim(fgets(STDIN));
-
-        $medico = new Medico($nombre, $apellido, $dni, $especialidad,$matricula);
-        return $medico;
-    }
-
     public function agregarMedico() {
-        $medico = $this->tomarDatoMedico();
+        $medico = Medico::tomarDatoMedico();
         $this->medicos[] = $medico;
         echo "Médico agregado: {$medico->getNombreCompleto()} - Especialidad: {$medico->getEspecialidad()}\n";
     }
-    
+
     public function llenarHistorial() {
         $dni = $this->buscarDni();
         if ($dni) {
@@ -122,29 +171,6 @@ class Consultorio {
         }
     }
 
-    public function buscarDni() {
-        echo "Buscar Paciente por Dni: ";
-        $dni = trim(fgets(STDIN));
-        foreach ($this->pacientes as $paciente) {
-            if ($paciente->getDni() == $dni){
-                return $dni;
-            }
-        }
-    }
-
-    public function obtenerHistorial() {
-        $dni = $this->buscarDni();
-        if ($dni) {
-            foreach ($this->pacientes as $paciente) {
-                if($paciente->getDni() == $dni) {
-                    $paciente->gethistorialMedico();
-                }
-            } 
-        }else{
-            echo "Paciente no encontrado";
-        }
-    }
-
     public function mostrarHistorial() {
         $dni = $this->buscarDni();
         foreach ($this->pacientes as $paciente) {
@@ -153,81 +179,11 @@ class Consultorio {
                 echo "\n";
             }     
         } 
-    }       
+    }  
     
-    public function sacarTurno(){
-        $dni = $this->buscarDni();
-        if (isset($dni)) {
-            foreach ($this->pacientes as $paciente) {
-                if ($paciente->getDni() == $dni) {
-                    echo "Ingresa una fecha (dd-mm-YYYY): ";
-                    $fecha = trim(fgets(STDIN));
-                    if ($this->validarFecha($fecha)) {
-                        echo
-                        $this->listarMedicos();
-                        echo "seleccione el medico: ";
-                        $medico = trim(fgets(STDIN));
-                        echo "seleccione un horario: ";
-                        $hora = trim(fgets(STDIN));
-                        $turno = new Turno($fecha, $hora, $medico,$paciente->getDni());
-                        $this->turnos[] = $turno;
-                        echo "Turno generado con exito.\n";
-                        echo $turno->turnoExitoso();
-                    }else{
-                        echo "Ingreso de fecha invalido. recuerde!!! (dd-mm-YYYY)";
-                    }
-                }
-            } 
-        }else{
-            echo "No se encontro un paciente con el siguiente DNI: $dni";
-        }
-    }
-
-    public function buscarFecha() {
-        echo "Ingrese la fecha del turno (dd-mm-YYYY): ";
-        $fecha = trim(fgets(STDIN));
-
-        if ($this->validarFecha($fecha)) {
-            foreach ($this->turnos as $key => $turno) {
-                if ($turno->getFecha() == $fecha) {
-                    return $fecha;
-                }
-            }
-        }
-        return false;
-    }
-
-    public function validarFecha($fecha) {
-        $patron = '/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\d{4})$/';
-        
-        if (preg_match($patron, $fecha)) {
-            list($dia, $mes, $anio) = explode('-', $fecha);
-        
-            if (checkdate($mes, $dia, $anio)) {
-                return true;
-            }
-        }      
-        return false;
-    }
-        
-    public function anularTurno() {
-        $dni = $this->buscarDni();
-        $fecha = $this->buscarFecha();
-        if (isset($fecha)) {
-            foreach ($this->turnos as $key => $turno) {
-                if ($turno->getFecha() == $fecha && $turno->getPaciente() == $dni) {
-                    unset($this->turnos[$key]);
-                    echo "Turno cancelado.";
-                }
-            }
-        }else{
-            echo "No se encontró el turno para cancelar.";
-        }
-    }
-
     public function listarMedicos() {
         echo "Listado de Medicos\n";
-        echo "===================\n";
+        echo "==================\n";
         
         foreach ($this->medicos as $medico) {
             echo $medico->listar();
@@ -235,27 +191,31 @@ class Consultorio {
         }       
     }
 
-    public function getTurnos() {
+    public function listarMedicosXespecialidad() {
         
-        echo "Ingrese la fecha del turno: ";
-        $fecha = trim(fgets(STDIN));
-
-        echo "Listado de Turnos del dia $fecha\n";
-        echo "===================\n";
+        $especilidad = Medico::seleccionarEspecialidad();
         
-        foreach ($this->turnos as $turno) {
-            if ($turno->getFecha() === $fecha) {
-                echo $turno->getFecha();
-            }     
+        if($this->comprobarEspecialidad($especilidad)){
+            echo "Listado de Medicos por Especialidad\n";
+            echo "===================================\n";
+            foreach ($this->medicos as $medico) {
+                if($medico->getEspecialidad() == $especilidad)
+                echo $medico->listar();
+                echo "\n";
+            }       
+        }else{
+            echo "No tenemos un Especialista para esa Especialidad";
         }
     }
 
-    public function listarPacientes() {
-        
-        foreach ($this->pacientes as $paciente) {
-            echo $paciente->getNombreCompleto();
-            echo "\n";
-        }       
+    public function comprobarEspecialidad($especialidad){
+        $comprobar = false;
+
+        foreach( $this->medicos as $medico){
+            if($medico->getEspecialidad() == $especialidad);
+            $comprobar = true;
+        }
+        return $comprobar;
     }
 
     public function getJson(){
@@ -331,6 +291,8 @@ class Consultorio {
                 $this->turnos[] = $t;
             }
         }
-    }    
+    }
+
+        
  
 }

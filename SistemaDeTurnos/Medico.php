@@ -22,7 +22,7 @@ class Medico extends Persona {
     }
 
     public function listar(){
-        return $this->getNombreCompleto()."\nMatricula: ".$this->getMatricula()."Especialidad:".$this->getEspecialidad()."\n";
+        return $this->getNombreCompleto()."\nMatricula: ".$this->getMatricula()." Especialidad:".$this->getEspecialidad()."\n";
     }
 
     public function getJson(){
@@ -34,6 +34,34 @@ class Medico extends Persona {
         $output['matricula'] = $this->matricula;
 
         return json_encode($output);
+    }
+
+    public static function tomarDatoMedico(){
+        echo "Nombre del médico: ";
+        $nombre = trim(fgets(STDIN));
+        echo "Apellido del médico: ";
+        $apellido = trim(fgets(STDIN));
+        echo "DNI del médico: ";
+        $dni = trim(fgets(STDIN));
+        echo "Especialidad del médico: ";
+        $especialidad = trim(fgets(STDIN));
+        echo "Matricula del médico: ";
+        $matricula = trim(fgets(STDIN));
+
+        $medico = new Medico($nombre, $apellido, $dni, $especialidad,$matricula);
+        return $medico;
+    }
+
+    public static function seleccionarMedico(){
+        echo "seleccione el medico: ";
+        $m = trim(fgets(STDIN));
+        return $m;
+    }
+
+    public static function seleccionarEspecialidad(){
+        echo "seleccione una especialidad: ";
+        $e = trim(fgets(STDIN));
+        return $e;
     }
     
 }

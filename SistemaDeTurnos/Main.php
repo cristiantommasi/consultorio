@@ -25,6 +25,8 @@
                         $consultorio->turnosDisponibles();break;//lograda
                     case "4":
                         $consultorio->listarMedicos();break;//lograda
+                    case "5":
+                        $consultorio->listarMedicosXespecialidad();break;//lograda
                 } 
                 Menu::pressEnter();
                 Menu::cls(); break;
@@ -34,7 +36,7 @@
             $medico = $subMenu->elegir();
                 switch ($medico) {
                     case '1':
-                        $consultorio->mostrarDia();break;//anda pero no puedo ordenar los turnos por fecha para mostrar.
+                        $consultorio->mostrarDia();break;//lograda
                     case "2":
                         $consultorio->mostrarHistorial();break;//lograda
                     case "3":

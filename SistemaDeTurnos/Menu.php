@@ -50,10 +50,11 @@
             $menu = new Menu('Pacientes');
 
             $menu->addOpcion(0, 'Volver'); 
-            $menu->addOpcion(1, 'Sacar Turno'); 
+            $menu->addOpcion(1, 'Tomar Turno'); 
             $menu->addOpcion(2, 'Cancelar Turno'); 
             $menu->addOpcion(3, 'Consultar Turnos Disponibles'); 
-            $menu->addOpcion(4, 'Ver Medicos'); 
+            $menu->addOpcion(4, 'Ver todos los Medicos'); 
+            $menu->addOpcion(5, 'Ver Medicos por Especialidad'); 
 
             return $menu;
         }
@@ -62,9 +63,9 @@
             $menu = new Menu('Medicos');
 
             $menu->addOpcion(0, 'Volver'); 
-            $menu->addOpcion(1, 'Ver Turnos por Fecha'); 
-            $menu->addOpcion(2, 'Ver Historia Clinica'); 
-            $menu->addOpcion(3, 'Cargar Historia CLinica'); 
+            $menu->addOpcion(1, 'Ver Turnos tomados por Fecha'); 
+            $menu->addOpcion(2, 'Ver Historia Clinica de Paciente'); 
+            $menu->addOpcion(3, 'Cargar Historia Clinica de Paciente'); 
 
             return $menu;
         }

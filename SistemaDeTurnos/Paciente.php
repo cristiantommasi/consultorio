@@ -28,5 +28,17 @@ class Paciente extends Persona {
 
         return json_encode($output);
     }
+
+    public static function tomarDatoPaciente(){
+        echo "Nombre del paciente: ";
+        $nombre = trim(fgets(STDIN));
+        echo "Apellido del paciente: ";
+        $apellido = trim(fgets(STDIN));
+        echo "DNI del paciente: ";
+        $dni = trim(fgets(STDIN));
+
+        $paciente = new Paciente($nombre, $apellido, $dni);
+        return $paciente;
+    }
     
 }

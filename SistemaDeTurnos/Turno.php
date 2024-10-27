@@ -21,10 +21,6 @@ class Turno {
         return $this->hora;
     }
 
-    public function getTurno() {
-        return $this;
-    }
-
     public function getMedico() {
         return $this->medico;
     }
@@ -34,11 +30,11 @@ class Turno {
     }
 
     public function turnoExitoso(){
-        return "Turno: {$this->fecha} {$this->hora}hs. , Médico: {$this->getMedico()}";
+        return "Turno: {$this->fecha} {$this->hora}hs, Médico: {$this->getMedico()}";
     }
 
     public function mostrarInformacion() {
-        return "Turno: {$this->fecha} {$this->hora}.\nMédico: {$this->getMedico()}\nPaciente: {$this->getPaciente()}\n\n";
+        return "Turno: {$this->fecha} {$this->hora}hs.\nMédico: {$this->getMedico()}\nPaciente: {$this->getPaciente()}\n\n";
     }
 
     public function getJson(){
@@ -49,6 +45,31 @@ class Turno {
         $output['paciente'] = $this->paciente;
 
         return json_encode($output);
+    }
+
+    public static function seleccionarHorario(){
+        echo "Ingrese una hora: ";
+        $h = trim(fgets(STDIN));
+        return $h;
+    }
+
+    public static function seleccionarFecha(){
+        echo "Ingresa una fecha (dd-mm-YYYY): ";
+        $f = trim(fgets(STDIN));
+        return $f;
+    }
+
+    public static function validarFecha($fecha) {
+        $patron = '/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(\d{4})$/';
+        
+        if (preg_match($patron, $fecha)) {
+            list($dia, $mes, $anio) = explode('-', $fecha);
+        
+            if (checkdate($mes, $dia, $anio)) {
+                return true;
+            }
+        }      
+        return false;
     }
 
 }

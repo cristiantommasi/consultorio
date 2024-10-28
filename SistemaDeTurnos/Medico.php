@@ -53,7 +53,7 @@ class Medico extends Persona {
     }
 
     public static function seleccionarMedico(){
-        echo "seleccione el medico: ";
+        echo "Ingrese nombre del medico: ";
         $m = trim(fgets(STDIN));
         return $m;
     }
@@ -62,6 +62,12 @@ class Medico extends Persona {
         echo "seleccione una especialidad: ";
         $e = trim(fgets(STDIN));
         return $e;
+    }
+
+    public static function medicoDni(){
+        echo "Ingrese DNI: ";
+        $dni = trim(fgets(STDIN));
+        return $dni;
     }
     
 }

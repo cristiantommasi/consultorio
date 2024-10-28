@@ -76,9 +76,10 @@
             $menu->addOpcion(0, 'Volver'); 
             $menu->addOpcion(1, 'Agregar Paciente'); 
             $menu->addOpcion(2, 'Agregar Medico'); 
-            $menu->addOpcion(3, 'Agregar Turno'); 
-            $menu->addOpcion(4, 'Anular Turno'); 
-            $menu->addOpcion(5, 'Ver Turnos por Fecha'); 
+            $menu->addOpcion(3, 'Baja de Medicos'); 
+            $menu->addOpcion(4, 'Agregar Turno'); 
+            $menu->addOpcion(5, 'Anular Turno'); 
+            $menu->addOpcion(6, 'Ver Turnos por Fecha'); 
 
             return $menu;
         }

@@ -9,24 +9,22 @@
     $menu = Menu::getMenuConsultorio();
 
     do {
-        
         $opcion = $menu->elegir();
-
         switch ($opcion) {
             case 1: $subMenu = Menu::getMenuPacientes();
             Menu::cls();
             $paciente = $subMenu->elegir();
                 switch ($paciente) {
                     case '1':
-                        $consultorio->sacarTurno();break;//lograda. Faltaria comprobar que no hay turno en ese horario para TOMARLO
+                        $consultorio->sacarTurno();break;
                     case "2":
-                        $consultorio->anularTurno();break;//lograda
+                        $consultorio->anularTurno();break;
                     case "3":
-                        $consultorio->turnosDisponibles();break;//lograda
+                        $consultorio->turnosDisponibles();break;
                     case "4":
-                        $consultorio->listarMedicos();break;//lograda
+                        $consultorio->listarMedicos();break;
                     case "5":
-                        $consultorio->listarMedicosXespecialidad();break;//lograda
+                        $consultorio->listarMedicosXespecialidad();break;
                 } 
                 Menu::pressEnter();
                 Menu::cls(); break;
@@ -36,11 +34,11 @@
             $medico = $subMenu->elegir();
                 switch ($medico) {
                     case '1':
-                        $consultorio->mostrarDia();break;//lograda
+                        $consultorio->mostrarDia();break;
                     case "2":
-                        $consultorio->mostrarHistorial();break;//lograda
+                        $consultorio->mostrarHistorial();break;
                     case "3":
-                        $consultorio->llenarHistorial();break;//lograda
+                        $consultorio->llenarHistorial();break;
                 }
                 Menu::pressEnter();
                 Menu::cls(); break;
@@ -50,14 +48,16 @@
             $admin = $subMenu->elegir();
                 switch ($admin) {
                     case '1':
-                        $consultorio->agregarPaciente();break;//lograda
+                        $consultorio->agregarPaciente();break;
                     case "2":
-                        $consultorio->agregarMedico();break;//lograda
-                    case "3":    
-                        $consultorio->sacarTurno();break;//lograda
-                    case "4":
-                        $consultorio->anularTurno();break;//lograda
+                        $consultorio->agregarMedico();break;
+                    case "3":
+                        $consultorio->bajaMedico();break;
+                    case "4":    
+                        $consultorio->sacarTurno();break;
                     case "5":
+                        $consultorio->anularTurno();break;
+                    case "6":
                         $consultorio->turnosDisponibles();break;
                 }
                 Menu::pressEnter();

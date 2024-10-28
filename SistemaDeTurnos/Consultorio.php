@@ -51,9 +51,7 @@ class Consultorio {
                     }
                 } 
                 return $turnoDia;
-            }else{
-                echo "No hay turnos registrados en la fecha: $fecha";
-            }
+            }else{ echo "No hay turnos registrados en la fecha: $fecha";}
         }
     }
 
@@ -65,6 +63,7 @@ class Consultorio {
             for ($i=10; $i <20 ; $i++) { 
                 $condicion = true;
                 $hora = $i;
+                if($dia!= null)
                 foreach ($dia as $d){
                     if($hora == $d->getHora()){
                         $condicion = false;
@@ -72,9 +71,7 @@ class Consultorio {
                 }
                 if ($condicion) {
                     echo "$i:00hs Disponible\n";
-                } else {
-                    echo "$i:00hs Tomado\n";
-            }
+                }else{ echo "$i:00hs Tomado\n";}
         }
     }
 
@@ -104,17 +101,11 @@ class Consultorio {
                             $this->turnos[] = $turno;
                             echo "Turno generado con exito.\n";
                             echo $turno->turnoExitoso();
-                        }else{
-                            echo "Ya hay un turno TOMADO en ese horario.";
-                        }
-                    }else{ 
-                        echo "Ingreso de fecha invalido. recuerde!!! (dd-mm-YYYY)";
-                    }
+                        }else{echo "Ya hay un turno TOMADO en ese horario.";}
+                    }else{ echo "Ingreso de fecha invalido. recuerde!!! (dd-mm-YYYY)";}
                 }
             } 
-        }else{ 
-            echo "No se encontro el paciente.";
-        }
+        }else{ echo "No se encontro el paciente.";}
     }
 
     public function anularTurno() {
@@ -128,13 +119,11 @@ class Consultorio {
                     echo "Turno cancelado.";
                 }
             }
-        }else{
-            echo "No se encontró el turno para cancelar.";
-        }
+        }else{ echo "No se encontró el turno para cancelar.";}
     }
 
     public function buscarDni() {
-        echo "Buscar Paciente por Dni: ";
+        echo "Ingrese el Dni: ";
         $dni = trim(fgets(STDIN));
         foreach ($this->pacientes as $paciente) {
             if ($paciente->getDni() == $dni){
@@ -156,19 +145,30 @@ class Consultorio {
         echo "Médico agregado: {$medico->getNombreCompleto()} - Especialidad: {$medico->getEspecialidad()}\n";
     }
 
+    public function bajaMedico() {
+        echo "Ingrese el Dni del medico: ";
+        $m = trim(fgets(STDIN));
+        if ($m) {
+            foreach ($this->medicos as $key => $medico) {
+                if ($medico->getDni() == $m) {
+                    unset($this->medicos[$key]);
+                    echo "Medico dado de baja.";
+                }
+            }
+        }else{ echo "No se ha encontrado el medico.";}
+    }
+
     public function llenarHistorial() {
         $dni = $this->buscarDni();
         if ($dni) {
             foreach ($this->pacientes as $paciente) {
                 if ($paciente->getDni() == $dni) {
-                    echo "Agregar a Historia Clinica: ";
+                    echo "Agregar descripcion a Historia Clinica: ";
                     $entrada = trim(fgets(STDIN));
                     $paciente->setHistorialMedico($entrada);
                 } 
             }
-        }else{
-            echo "Paciente no encontrado";
-        }
+        }else{ echo "Paciente no encontrado";}
     }
 
     public function mostrarHistorial() {
@@ -203,9 +203,7 @@ class Consultorio {
                 echo $medico->listar();
                 echo "\n";
             }       
-        }else{
-            echo "No tenemos un Especialista para esa Especialidad";
-        }
+        }else{ echo "No tenemos un Especialista para esa Especialidad";}
     }
 
     public function comprobarEspecialidad($especialidad){
@@ -225,16 +223,13 @@ class Consultorio {
         $output['turnos'] = [];
 
         foreach($this->pacientes as $paciente){
-            $output['pacientes'][]=$paciente->getJson();
-        }
+            $output['pacientes'][]=$paciente->getJson();}
 
         foreach($this->medicos as $medico){
-            $output['medicos'][]=$medico->getJson();
-        }
+            $output['medicos'][]=$medico->getJson();}
 
         foreach($this->turnos as $turno){
-            $output['turnos'][]=$turno->getJson();
-        }
+            $output['turnos'][]=$turno->getJson();}
 
         return json_encode($output);
     }
@@ -254,9 +249,7 @@ class Consultorio {
                 $this->leerMedicos($datos);
                 $this->leerTurnos($datos); 
             }
-        } else {
-            echo "El archivo no existe.";
-        }
+        } else { echo "El archivo no existe.";}
     }
 
     public function leerPacientes($data){
@@ -291,8 +284,6 @@ class Consultorio {
                 $this->turnos[] = $t;
             }
         }
-    }
-
-        
+    }      
  
 }

@@ -16,7 +16,7 @@ class Paciente extends Persona {
     }
 
     public function setHistorialMedico($texto){
-        $this->historialMedico = $this->getHistorialMedico(). " " .$texto;
+        $this->historialMedico =  "$texto\n";
     }
 
     public function getJson(){
